@@ -146,7 +146,10 @@ p1 = ggplot(data = region_summ %>% filter(type=="prediction")) +
     aes(x=time+1990, y=estimate, ymin=ci.lower, ymax=ci.upper),
     data=region_summ %>% filter(type=="realized")
     )
+print(p1)
 ```
+
+![](README-unnamed-chunk-11-1.png)
 
 #### Disclaimer
 
