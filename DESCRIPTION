@@ -1,0 +1,19 @@
+Package: agTrend.gam
+Type: Package
+Title: Estimate Linear Trends for Aggregated Abundance Data
+Version: 0.01.9000
+Date: 2018-10-24
+Author: Devin S. Johnson
+Maintainer: Devin S. Johnson <devin.johnson@noaa.gov>
+Description: R package for fitting temporal trends to abundance data aggregated
+    over large regions when subregions have missing data.
+Depends:
+    coda,
+    mgcv,
+    tidyverse,
+    mvtnorm,
+    furrr
+License: CC0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
