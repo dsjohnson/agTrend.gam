@@ -27,7 +27,8 @@ make.agtrend.data <- function(object, abundance.name, site.name, time.name, gam.
   object %>% mutate(
     n_survey = purrr::map_int(data, nrow),
     num_nonzero = purrr::map_dbl(data, ~{sum(.x$z)}),
-    max_abund = purrr::map_dbl(data, ~{max(.x$y)})
+    max_abund = purrr::map_dbl(data, ~{max(.x$y)}),
+    avg_abund = purrr::map_dbl(data, ~{mean(.x$y, na.rm=TRUE)})
   ) -> object
   return(object)
 }

@@ -7,10 +7,10 @@
 site.simulate(data, obs.formula = NULL, sig.abund = NULL, min.k = 3,
   forecast = 0, family = c("tweedie", "log.normal"), ln.adj = 0,
   obs.prior = NULL, upper = Inf, lower = -Inf, fit.only = FALSE,
-  post.size = 1000, run.parallel = FALSE)
+  post.size = 1000)
 }
 \arguments{
-\item{run.parallel}{}
+\item{post.size}{}
 }
 \value{
 A named list with the following elements:

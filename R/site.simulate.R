@@ -15,7 +15,6 @@
 #' @param lower
 #' @param fit.only
 #' @param post.size
-#' @param run.parallel
 #'
 #' @return
 #' A named list with the following elements:
@@ -35,22 +34,15 @@ site.simulate <- function(data, obs.formula=NULL, sig.abund=NULL,
                           obs.prior=NULL,
                           upper=Inf, lower=-Inf,
                           fit.only=FALSE,
-                          post.size=1000,
-                          run.parallel=FALSE
+                          post.size=1000
 ){
-
-
-  if(run.parallel){
-    plan(multiprocess)
-  } else plan(sequential)
 
   message("Fitting models to each site ... ")
   data <- data %>%
     mutate(
-      attempt = furrr::future_map(data, site.fit.gam %>% safely(),
+      attempt = purrr::map(data, site.fit.gam %>% safely(),
                                   obs.formula=obs.formula, min.k=min.k,
-                                  ln.adj=ln.adj, obs.prior=obs.prior,
-                                  .progress = TRUE)
+                                  ln.adj=ln.adj, obs.prior=obs.prior)
     )
   data <- data %>% mutate(
     fits = purrr::map(attempt, ~.x[["result"]]),
@@ -65,10 +57,9 @@ site.simulate <- function(data, obs.formula=NULL, sig.abund=NULL,
       message("Simulating missing observations ... ")
       max.time = purrr::map_dbl(data$data, ~{max(.x$time)}) %>% max()
       data = data %>% mutate(
-        post = furrr::future_map2(fits, data,
+        post = purrr::map2(fits, data,
                                   site.sim.gam %>% safely(), max.time=max.time+forecast,
-                                  size=post.size,
-                                  .progress = TRUE)
+                                  size=post.size)
       )
       data <- data %>% mutate(
         post.sample = purrr::map(post, ~.x[["result"]]),
@@ -78,9 +69,9 @@ site.simulate <- function(data, obs.formula=NULL, sig.abund=NULL,
         mutate(
           post.sample.real = purrr::map2(data, post.sample, sim.to.realized %>% possibly("NA"))
         )
+      if(any(!is.na(data$post.error))) warning("There were simulation issues! Check the 'post.error' column")
       return(data)
     }
   }
-  plan(sequential)
 }
 

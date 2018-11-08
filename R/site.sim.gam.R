@@ -10,7 +10,7 @@
 #' @return a matrix that is max.time by size
 #' @author Devin S. Johnson
 #' @export
-#' @import mgcv
+#' @import mgcv tweedie
 #' @import mvtnorm
 
 site.sim.gam = function(fits, data, max.time, size){
@@ -30,6 +30,6 @@ site.sim.gam = function(fits, data, max.time, size){
   mu.sim = L %*% t(b.sim) %>% base::exp() %>% as.vector()
   p = fits$family$getTheta(trans = T)
   phi = summary(fits)$dispersion
-  a.sim = mgcv::rTweedie(mu.sim, p, phi) %>% matrix(nrow=nrow(L),ncol=size) %>% round()
+  a.sim = tweedie::rtweedie(n=length(mu.sim), mu=mu.sim, phi=phi, power=p) %>% matrix(nrow=nrow(L),ncol=size) %>% round()
   return(a.sim)
 }

@@ -12,7 +12,8 @@ Depends:
     mgcv,
     tidyverse,
     mvtnorm,
-    furrr
+    furrr,
+    modeest
 License: CC0
 Encoding: UTF-8
 LazyData: true

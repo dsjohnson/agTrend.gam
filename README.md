@@ -1,8 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![DOI](https://zenodo.org/badge/8592075.svg)](https://zenodo.org/badge/latestdoi/8592075)
-
 Fit regional trends to site-specific abundence data
----------------------------------------------------
+===================================================
 
 This package fits a log-linear trend models to regions aggregated over
 sites. The sites may contain missing surveys that are not temporally
@@ -17,19 +15,8 @@ posterior predictive distribution allows incorporation of both parameter
 uncertainty as well as uncertainty due to sampling the local abundance
 processes.
 
-### Disclaimer
-
-*This software package is developed and maintained by scientists at the
-NOAA Fisheries Alaska Fisheries Science Center and should be considered
-a fundamental research communication. The reccomendations and
-conclusions presented here are those of the authors and this software
-should not be construed as official communication by NMFS, NOAA, or the
-U.S. Dept. of Commerce. In addition, reference to trade names does not
-imply endorsement by the National Marine Fisheries Service, NOAA. While
-the best efforts have been made to insure the highest quality, tools
-such as this are under constant development and are subject to change.*
-
-### Example
+Example
+-------
 
 Load packages for this example
 
@@ -40,18 +27,22 @@ library(agTrend.gam)
 #> Loading required package: nlme
 #> This is mgcv 1.8-25. For overview type 'help("mgcv-package")'.
 #> Loading required package: tidyverse
-#> ── Attaching packages ───────────────────────── tidyverse 1.2.1 ──
+#> ── Attaching packages ──────────────────────────────────── tidyverse 1.2.1 ──
 #> ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
 #> ✔ tibble  1.4.2     ✔ dplyr   0.7.7
 #> ✔ tidyr   0.8.2     ✔ stringr 1.3.1
 #> ✔ readr   1.1.1     ✔ forcats 0.3.0
-#> ── Conflicts ──────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ─────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::collapse() masks nlme::collapse()
 #> ✖ dplyr::filter()   masks stats::filter()
 #> ✖ dplyr::lag()      masks stats::lag()
 #> Loading required package: mvtnorm
 #> Loading required package: furrr
 #> Loading required package: future
+#> Loading required package: modeest
+#> 
+#> This is package 'modeest' written by P. PONCET.
+#> For a complete list of functions, use 'library(help = "modeest")' or 'help.start()'.
 #> 
 #>  agTrend.gam 0.01.9000 (2018-10-24) 
 #>  A demo is available at https://github.com/NMML/agTrend
@@ -64,7 +55,7 @@ Now we’ll add a photo method covariate to data (oblique photos prior to
 
 ``` r
 data(wdpsNonpups)
-wdpsNonpups = wdpsNonpups %>% filter(YEAR>=1990) %>% mutate(obl = as.integer(YEAR<2004))
+wdpsNonpups = wdpsNonpups %>% filter(YEAR>=1990 & YEAR<=2012) %>% mutate(obl = as.integer(YEAR<2004))
 ```
 
 The data is then converted to the form necessary for the site abundance
@@ -78,7 +69,8 @@ Now, we count the number of positive counts at each site so that we can
 remove sites that had only 1 positive count
 
 ``` r
-fit_data <- fit_data %>% filter(num_nonzero>1)
+fit_data <- fit_data %>% 
+  filter(num_nonzero>1 & n_survey*avg_abund>5)
 ```
 
 The next step involves creating a prior distribution list for MCMC site
@@ -103,8 +95,8 @@ function performs the site augmentation and samples from the posterior
 predictive distribution of the count data.
 
 ``` r
-set.seed(123) 
-fit_data = site.simulate(fit_data %>% slice(1:5), 
+set.seed(111) 
+fit_data = site.simulate(fit_data, 
                          obs.formula=~obl-1,
                          min.k = 3, obs.prior=obs.prior, 
                          fit.only=F)
@@ -141,7 +133,7 @@ p1 = ggplot(data = region_summ %>% filter(type=="prediction")) +
   geom_path(aes(y=estimate, x=time+1990)) + 
   geom_ribbon(
     aes(ymin=ci.lower, ymax=ci.upper,x=time+1990),alpha=0.2,fill="red"
-    ) + facet_wrap(~REGION, ncol=2) +
+    ) + facet_wrap(~REGION, ncol=2, scales = "free_y") +
   geom_pointrange(
     aes(x=time+1990, y=estimate, ymin=ci.lower, ymax=ci.upper),
     data=region_summ %>% filter(type=="realized")
@@ -151,7 +143,26 @@ print(p1)
 
 ![](README-unnamed-chunk-11-1.png)
 
-#### Disclaimer
+Finally, we get to the main purpose of the package, to estimate
+log-linear trends for the aggregated abundances. This is accomplished
+with the function `ag.trend`
+
+``` r
+region_trends = region_data %>% ag.trend(time.range=c(2000-1990, 2012-1990))
+region_trends %>% select(-trend.sample, -trend.line)
+#> # A tibble: 6 x 4
+#>   REGION growth.estimate growth.lower growth.upper
+#>   <chr>            <dbl>        <dbl>        <dbl>
+#> 1 C ALEU          -0.285       -1.32         0.596
+#> 2 C GULF           1.53        -0.496        4.64 
+#> 3 E ALEU           2.12         0.492        4.66 
+#> 4 E GULF           5.59         2.65         8.33 
+#> 5 W ALEU          -7.71        -9.34        -5.72 
+#> 6 W GULF           3.39         1.99         5.00
+```
+
+Disclaimer
+----------
 
 <sub>This repository is a scientific product and is not official
 communication of the Alaska Fisheries Science Center, the National
