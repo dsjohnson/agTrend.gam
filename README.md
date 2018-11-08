@@ -27,12 +27,12 @@ library(agTrend.gam)
 #> Loading required package: nlme
 #> This is mgcv 1.8-25. For overview type 'help("mgcv-package")'.
 #> Loading required package: tidyverse
-#> ── Attaching packages ──────────────────────────────────── tidyverse 1.2.1 ──
+#> ── Attaching packages ─────────────────── tidyverse 1.2.1 ──
 #> ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
 #> ✔ tibble  1.4.2     ✔ dplyr   0.7.7
 #> ✔ tidyr   0.8.2     ✔ stringr 1.3.1
 #> ✔ readr   1.1.1     ✔ forcats 0.3.0
-#> ── Conflicts ─────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::collapse() masks nlme::collapse()
 #> ✖ dplyr::filter()   masks stats::filter()
 #> ✖ dplyr::lag()      masks stats::lag()
@@ -109,7 +109,7 @@ the counts by desired regions
 
 ``` r
 fit_data = fit_data %>% left_join(
-  wdpsNonpups %>% select(SITE, REGION, RCA) %>% distinct(), by=c("site"="SITE")
+  wdpsNonpups %>% select(SITE, REGION, REGION) %>% distinct(), by=c("site"="SITE")
   ) %>% mutate(TOTAL="TOTAL")
 ```
 
@@ -160,6 +160,18 @@ region_trends %>% select(-trend.sample, -trend.line)
 #> 5 W ALEU          -7.71        -9.34        -5.72 
 #> 6 W GULF           3.39         1.99         5.00
 ```
+
+The fitted trendlines can be added to the plots
+
+``` r
+tl = region_trends %>% select(REGION, trend.line) %>% unnest()
+p1 = p1 +
+  geom_path(aes(y=fitted, x=time+1990), data=tl, col="blue", lwd=2) +
+  xlab("Year") + ylab("Count") + theme_minimal()
+p1
+```
+
+![](README-unnamed-chunk-13-1.png)
 
 Disclaimer
 ----------

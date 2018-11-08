@@ -72,7 +72,7 @@ Now we add the regional designations to `fit_data` in order to summarize the cou
 
 ```{r}
 fit_data = fit_data %>% left_join(
-  wdpsNonpups %>% select(SITE, REGION, RCA) %>% distinct(), by=c("site"="SITE")
+  wdpsNonpups %>% select(SITE, REGION, REGION) %>% distinct(), by=c("site"="SITE")
   ) %>% mutate(TOTAL="TOTAL")
 ```
 
@@ -108,6 +108,14 @@ region_trends = region_data %>% ag.trend(time.range=c(2000-1990, 2012-1990))
 region_trends %>% select(-trend.sample, -trend.line)
 ```
 
+The fitted trendlines can be added to the plots
+```{r}
+tl = region_trends %>% select(REGION, trend.line) %>% unnest()
+p1 = p1 +
+  geom_path(aes(y=fitted, x=time+1990), data=tl, col="blue", lwd=2) +
+  xlab("Year") + ylab("Count") + theme_minimal()
+p1
+```
 
 ## Disclaimer
 
