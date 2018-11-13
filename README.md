@@ -27,25 +27,19 @@ library(agTrend.gam)
 #> Loading required package: nlme
 #> This is mgcv 1.8-25. For overview type 'help("mgcv-package")'.
 #> Loading required package: tidyverse
-#> ── Attaching packages ─────────────────── tidyverse 1.2.1 ──
+#> ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.2.1 ──
 #> ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
 #> ✔ tibble  1.4.2     ✔ dplyr   0.7.7
 #> ✔ tidyr   0.8.2     ✔ stringr 1.3.1
 #> ✔ readr   1.1.1     ✔ forcats 0.3.0
-#> ── Conflicts ────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::collapse() masks nlme::collapse()
 #> ✖ dplyr::filter()   masks stats::filter()
 #> ✖ dplyr::lag()      masks stats::lag()
 #> Loading required package: mvtnorm
-#> Loading required package: furrr
-#> Loading required package: future
-#> Loading required package: modeest
-#> 
-#> This is package 'modeest' written by P. PONCET.
-#> For a complete list of functions, use 'library(help = "modeest")' or 'help.start()'.
 #> 
 #>  agTrend.gam 0.01.9000 (2018-10-24) 
-#>  A demo is available at https://github.com/NMML/agTrend
+#>  A demo is available at https://github.com/dsjohnson/agTrend.gam
 ```
 
 Now we can load the data that is included with the `agTrend.gam` package

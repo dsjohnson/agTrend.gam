@@ -200,7 +200,7 @@ NULL
     date <- info$Date
     packageStartupMessage(
       paste("\n",paste(package, version, paste("(",date, ")", sep=""), "\n"),
-            "A demo is available at https://github.com/NMML/agTrend"
+            "A demo is available at https://github.com/dsjohnson/agTrend.gam"
             )
     )
   }

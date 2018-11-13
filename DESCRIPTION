@@ -11,9 +11,7 @@ Depends:
     coda,
     mgcv,
     tidyverse,
-    mvtnorm,
-    furrr,
-    modeest
+    mvtnorm
 License: CC0
 Encoding: UTF-8
 LazyData: true

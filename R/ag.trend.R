@@ -5,12 +5,11 @@
 #' @param time.range A length 2 vector giving the start and end times for the
 #' trend estimates. These times are between 0 and the number times in the data set.
 #' Not, for example, specific years.
-#' @import dplyr modeest
+#' @import dplyr
 #' @author Devin S. Johnson
 #' @export
 
 ag.trend = function(object, time.range=NULL, ci.prob=0.95){
-  get_mode = function(x){modeest::mlv(x, method="shorth")$M}
   if(is.null(time.range)) time.range=c(0,nrow(object$post.sample[[1]])-1)
   times = time.range[1]:time.range[2]
   trends = object %>% select(post.sample) %>%
