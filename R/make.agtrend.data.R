@@ -7,19 +7,23 @@
 #' @param abundance.name
 #' @param site.name
 #' @param time.name
-#' @param gam.cut
 #'
 #' @return A tibble
 #' @author Devin S. Johnson
 #'
-#' @import dplyr
+#' @import dplyr rlang
 #' @export
 
-make.agtrend.data <- function(object, abundance.name, site.name, time.name, gam.cut){
+make.agtrend.data <- function(object, abundance.name, site.name, time.name){
+  abundance.name = rlang::enquo(abundance.name)
+  site.name = rlang::enquo(site.name)
+  time.name = rlang::enquo(time.name)
+  object = object %>% filter(!is.na(!!abundance.name))
   object %>% dplyr::mutate(
-    y=.data[[abundance.name]],
-    site=.data[[site.name]],
-    time=.data[[time.name]]) %>%
+    y := !! abundance.name,
+    site := !! site.name,
+    time := !! time.name
+    ) %>%
     dplyr::mutate(time=time-min(time),
                   ym1 = ifelse(y>0, y-1, NA),
                   z = 1.0*(y>0)

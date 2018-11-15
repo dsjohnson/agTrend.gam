@@ -30,7 +30,7 @@ site.fit.gam = function(data, obs.formula=NULL, sig.abund=NULL,
     if(all(apply(X,2,var)==0)){
       use.gamma=FALSE
       } else{use.gamma=TRUE}
-  } else(us.gamma=FALSE)
+  } else(use.gamma=FALSE)
   if(use.gamma){
     # Fit models
     if(nz>=gam.cut){

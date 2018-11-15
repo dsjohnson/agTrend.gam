@@ -4,10 +4,10 @@
 \alias{make.agtrend.data}
 \title{Produce data object for use in \code{site.simulate}}
 \usage{
-make.agtrend.data(object, abundance.name, site.name, time.name, gam.cut)
+make.agtrend.data(object, abundance.name, site.name, time.name)
 }
 \arguments{
-\item{gam.cut}{}
+\item{time.name}{}
 }
 \value{
 A tibble
