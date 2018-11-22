@@ -6,14 +6,17 @@ This package fits a log-linear trend models to regions aggregated over
 sites. The sites may contain missing surveys that are not temporally
 aligned with the missing data at other sites, making direct aggregation
 impossible. The functions within the package model the indivdual sites
-with a semi-parametric (possibly, zero-inflated) model to interpolate
-missing data from which regional aggregations can be made. By using
-Markov Chain Monte Carlo, on can sample from the posterior predictive
-distribution of the regional aggregations Then calculate the log-linear
-trend over the time period of interest as a derived parameter. Using the
-posterior predictive distribution allows incorporation of both parameter
-uncertainty as well as uncertainty due to sampling the local abundance
-processes.
+with a semi-parametric model to interpolate missing data from which
+regional aggregations can be made. After model fitting, one can sample
+from the posterior predictive distribution of the regional aggregations
+Then calculate the log-linear trend over the time period of interest as
+a derived parameter. Using the posterior predictive distribution allows
+incorporation of both parameter uncertainty as well as uncertainty due
+to sampling the local abundance processes.
+
+The model fitted to each site is given by the hierarchical
+specification:
+\[*y*<sub>*i**t*</sub>\] ∼ Tweedie(*μ*<sub>*i**t*</sub>, *ϕ*, *p*)
 
 Example
 -------
@@ -27,12 +30,12 @@ library(agTrend.gam)
 #> Loading required package: nlme
 #> This is mgcv 1.8-25. For overview type 'help("mgcv-package")'.
 #> Loading required package: tidyverse
-#> ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.2.1 ──
+#> ── Attaching packages ──────────── tidyverse 1.2.1 ──
 #> ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
-#> ✔ tibble  1.4.2     ✔ dplyr   0.7.7
+#> ✔ tibble  1.4.2     ✔ dplyr   0.7.8
 #> ✔ tidyr   0.8.2     ✔ stringr 1.3.1
 #> ✔ readr   1.1.1     ✔ forcats 0.3.0
-#> ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ── Conflicts ─────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::collapse() masks nlme::collapse()
 #> ✖ dplyr::filter()   masks stats::filter()
 #> ✖ dplyr::lag()      masks stats::lag()
@@ -56,7 +59,7 @@ The data is then converted to the form necessary for the site abundance
 imputing function
 
 ``` r
-fit_data = wdpsNonpups %>% make.agtrend.data(abundance.name="COUNT", site.name="SITE", time.name="YEAR") 
+fit_data = wdpsNonpups %>% make.agtrend.data(abundance.name=COUNT, site.name=SITE, time.name=YEAR) 
 ```
 
 Now, we count the number of positive counts at each site so that we can
